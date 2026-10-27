@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "initinfo.h"
-#include "initinfo_debug.h"
+
+#include <Sonic/Logging/Log>
 
 #include <QDir>
 #include <QFile>
@@ -18,6 +19,8 @@
 #endif
 
 #include <sys/stat.h>
+
+SONIC_LOGGING_COMPONENT("org.sonicde.frameworks.initinfo")
 
 namespace Sonic::InitInfo {
 namespace {
@@ -65,7 +68,7 @@ namespace {
     {
         QFile file(path);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qCDebug(SONIC_INITINFO) << "No readable inittab at" << path << "- assuming sysvinit manages services";
+            sonicDebug() << "No readable inittab at" << path << "- assuming sysvinit manages services";
             return ServiceManager::SysVinit;
         }
 
@@ -91,15 +94,15 @@ namespace {
             }
             const QString program = QFileInfo(tokens.first()).fileName();
             if (program == QLatin1String("openrc")) {
-                qCDebug(SONIC_INITINFO) << "inittab starts OpenRC:" << line;
+                sonicDebug() << "inittab starts OpenRC:" << line;
                 return ServiceManager::OpenRC;
             }
             if (program == QLatin1String("runsvdir") || program == QLatin1String("runit")) {
-                qCDebug(SONIC_INITINFO) << "inittab starts runit:" << line;
+                sonicDebug() << "inittab starts runit:" << line;
                 return ServiceManager::Runit;
             }
         }
-        qCDebug(SONIC_INITINFO) << "inittab starts no other service manager; sysvinit manages services";
+        sonicDebug() << "inittab starts no other service manager; sysvinit manages services";
         return ServiceManager::SysVinit;
     }
 
@@ -157,7 +160,7 @@ namespace {
     {
         const QDBusConnection bus = QDBusConnection::systemBus();
         if (!bus.isConnected() || !bus.interface()) {
-            qCDebug(SONIC_INITINFO) << "System bus unavailable for seat manager detection:" << bus.lastError().message();
+            sonicDebug() << "System bus unavailable for seat manager detection:" << bus.lastError().message();
             return SeatManager::None;
         }
         const QDBusReply<bool> login1 = bus.interface()->isServiceRegistered(QStringLiteral("org.freedesktop.login1"));
@@ -184,9 +187,9 @@ Pid1 pid1(const Environment& environment)
     if (!comm.isNull()) {
         const Pid1 result = pid1FromName(comm);
         if (result == Pid1::Unknown) {
-            qCWarning(SONIC_INITINFO) << "Unrecognised PID 1:" << comm;
+            sonicWarning() << "Unrecognised PID 1:" << comm;
         } else {
-            qCDebug(SONIC_INITINFO) << "PID 1 is" << name(result) << "from" << commPath << "=" << comm;
+            sonicDebug() << "PID 1 is" << name(result) << "from" << commPath << "=" << comm;
         }
         return result;
     }
@@ -197,10 +200,10 @@ Pid1 pid1(const Environment& environment)
     if (init.isSymbolicLink()) {
         const QString target = QFileInfo(init.readSymLink()).fileName();
         const Pid1 result = pid1FromName(target);
-        qCDebug(SONIC_INITINFO) << "PID 1 unreadable; /sbin/init points to" << init.readSymLink() << "->" << name(result);
+        sonicDebug() << "PID 1 unreadable; /sbin/init points to" << init.readSymLink() << "->" << name(result);
         return result;
     }
-    qCWarning(SONIC_INITINFO) << "Cannot identify PID 1:" << commPath << "is unreadable and /sbin/init is not a symlink";
+    sonicWarning() << "Cannot identify PID 1:" << commPath << "is unreadable and /sbin/init is not a symlink";
     return Pid1::Unknown;
 #endif
 }
@@ -243,7 +246,7 @@ ServiceManager serviceManager(const Environment& environment)
     case Pid1::Unknown:
         break;
     }
-    qCDebug(SONIC_INITINFO) << "Service manager:" << name(result);
+    sonicDebug() << "Service manager:" << name(result);
     return result;
 #endif
 }
@@ -265,7 +268,7 @@ SeatManager seatManager(const Environment& environment)
         }
         const SeatManager candidate = seatManagerFromName(comm);
         if (candidate != SeatManager::None && seatPreference(candidate) < seatPreference(best)) {
-            qCDebug(SONIC_INITINFO) << "Seat manager process" << entry << comm;
+            sonicDebug() << "Seat manager process" << entry << comm;
             best = candidate;
         }
     }
@@ -277,11 +280,11 @@ SeatManager seatManager(const Environment& environment)
     if (best == SeatManager::None && environment.useDBus) {
         best = seatManagerFromDBus(environment);
         if (best != SeatManager::None) {
-            qCDebug(SONIC_INITINFO) << "Seat manager from D-Bus name ownership:" << name(best);
+            sonicDebug() << "Seat manager from D-Bus name ownership:" << name(best);
         }
     }
 #endif
-    qCDebug(SONIC_INITINFO) << "Seat manager:" << name(best);
+    sonicDebug() << "Seat manager:" << name(best);
     return best;
 }
 

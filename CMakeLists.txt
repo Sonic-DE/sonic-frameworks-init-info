@@ -18,7 +18,6 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(ECMGenerateExportHeader)
 include(ECMSetupVersion)
-include(ECMQtDeclareLoggingCategory)
 
 include(KDEInstallDirs)
 include(KDECompilerSettings NO_POLICY_SCOPE)
@@ -28,6 +27,7 @@ include(CMakePackageConfigHelpers)
 
 set(REQUIRED_QT_VERSION 6.11.0)
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core)
+find_package(SonicLogging ${KF_VERSION} CONFIG REQUIRED)
 find_package(Qt6DBus ${REQUIRED_QT_VERSION} CONFIG)
 set_package_properties(Qt6DBus PROPERTIES TYPE OPTIONAL PURPOSE "Extra seat manager detection signal from D-Bus name ownership")
 

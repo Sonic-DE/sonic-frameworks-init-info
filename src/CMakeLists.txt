@@ -9,19 +9,9 @@ set_target_properties(SonicInitInfo PROPERTIES
     EXPORT_NAME InitInfo
 )
 
-set(sonicinitinfo_debug_SRCS)
-ecm_qt_declare_logging_category(sonicinitinfo_debug_SRCS
-    HEADER initinfo_debug.h
-    IDENTIFIER SONIC_INITINFO
-    CATEGORY_NAME sonic.initinfo
-    DEFAULT_SEVERITY Warning
-    DESCRIPTION "Sonic Init Info"
-)
-
 target_sources(SonicInitInfo PRIVATE
     initinfo.cpp
     initinfo.h
-    ${sonicinitinfo_debug_SRCS}
 )
 
 ecm_generate_export_header(SonicInitInfo
@@ -33,7 +23,7 @@ ecm_generate_export_header(SonicInitInfo
     DEPRECATED_BASE_VERSION 0
 )
 
-target_link_libraries(SonicInitInfo PUBLIC Qt6::Core)
+target_link_libraries(SonicInitInfo PUBLIC Qt6::Core PRIVATE Sonic::Logging)
 if(TARGET Qt6::DBus)
     target_link_libraries(SonicInitInfo PRIVATE Qt6::DBus)
     target_compile_definitions(SonicInitInfo PRIVATE SONIC_INITINFO_HAVE_DBUS)
