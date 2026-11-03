@@ -1,0 +1,45 @@
+// SPDX-FileCopyrightText: 2026 Joseph Crowell <joseph.w.crowell@gmail.com>
+// SPDX-License-Identifier: GPL-2.0-or-later
+
+/*!
+    \page sonicinitinfo-index.html
+    \title Sonic Init Info
+
+    Sonic Init Info tells SonicDE components, at runtime, which init system and
+    seat manager the machine is running. Code can then do the right thing on
+    systemd, OpenRC, runit, s6, dinit, sysvinit and the BSDs instead of
+    assuming systemd.
+
+    \list
+    \li \l Sonic::InitInfo: what runs as PID 1, what manages services and
+        seats, whether journald runs, and the VT a display manager starts on.
+    \endlist
+
+    None of this needs root. Nothing is cached; callers keep the result.
+
+    \code
+    using namespace Sonic::InitInfo;
+
+    if (serviceManager() == ServiceManager::OpenRC) {
+        // use rc-service / rc-update
+    }
+    \endcode
+
+    \section1 Using the Module
+
+    \section2 Building with CMake
+
+    Use the \c find_package() command to locate the SonicInitInfo package and
+    link against its target:
+
+    \badcode
+    find_package(SonicInitInfo REQUIRED)
+    target_link_libraries(mytarget PRIVATE Sonic::InitInfo)
+    \endcode
+
+    \section1 API Reference
+
+    \list
+        \li \l{Sonic Init Info C++ Classes}
+    \endlist
+*/

@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 Joseph Crowell <joseph.w.crowell@gmail.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = SonicInitInfo
+description = Runtime information about the init system and seat manager
+
+documentationinheaders = true
+
+headerdirs += .
+sourcedirs += .
+
+outputformats = HTML
+
+navigation.landingpage = "Sonic Init Info"
+
+depends += \
+    kde \
+    qtcore
+
+qhp.projects            = SonicInitInfo
+
+qhp.SonicInitInfo.file                = sonicinitinfo.qhp
+qhp.SonicInitInfo.namespace           = org.sonicde.sonicinitinfo.$QT_VERSION_TAG
+qhp.SonicInitInfo.virtualFolder       = sonicinitinfo
+qhp.SonicInitInfo.indexTitle          = Sonic Init Info
+qhp.SonicInitInfo.indexRoot           =
+
+qhp.SonicInitInfo.subprojects         = classes
+qhp.SonicInitInfo.subprojects.classes.title = C++ Classes
+qhp.SonicInitInfo.subprojects.classes.indexTitle = Sonic Init Info C++ Classes
+qhp.SonicInitInfo.subprojects.classes.selectors = class fake:headerfile
+qhp.SonicInitInfo.subprojects.classes.sortPages = true
+
+tagfile = sonicinitinfo.tags

@@ -34,6 +34,8 @@ target_include_directories(SonicInitInfo
     INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}>"
 )
 
+ecm_generate_qdoc(SonicInitInfo sonicinitinfo.qdocconf)
+
 install(TARGETS SonicInitInfo EXPORT SonicInitInfoTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 # <Sonic/InitInfo/InitInfo> forwards to the lowercase header installed next to it.

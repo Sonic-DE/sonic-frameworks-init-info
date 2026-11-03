@@ -1,0 +1,12 @@
+// SPDX-FileCopyrightText: 2026 Joseph Crowell <joseph.w.crowell@gmail.com>
+// SPDX-License-Identifier: GPL-2.0-or-later
+
+/*!
+    \module SonicInitInfo
+    \title Sonic Init Info C++ Classes
+    \ingroup modules
+    \cmakepackage SonicInitInfo
+    \cmaketargetitem Sonic::InitInfo
+
+    \brief Runtime information about the init system and seat manager.
+*/
